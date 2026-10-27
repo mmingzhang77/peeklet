@@ -13,7 +13,17 @@ internal static class Program
         if (args.Length == 1 && args[0] == "--self-test")
         {
             try { SelfTests.Run(); return 0; }
-            catch (Exception) { Console.Error.WriteLine("Peeklet self-test failed."); return 1; }
+            catch (InvalidOperationException error) when (error.Message.StartsWith("Self-test failed: ", StringComparison.Ordinal))
+            {
+                // Test names are fixed strings; never print paths or image data.
+                Console.Error.WriteLine(error.Message);
+                return 1;
+            }
+            catch (Exception error)
+            {
+                Console.Error.WriteLine("Peeklet self-test failed: " + error.GetType().Name);
+                return 1;
+            }
         }
 
         // A single active instance avoids simultaneous edits to the same library.
