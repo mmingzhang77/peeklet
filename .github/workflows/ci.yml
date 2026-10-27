@@ -2,7 +2,7 @@ name: Build and privacy checks
 
 on:
   push:
-    branches: [main]
+    branches: [main, windows-ci]
   pull_request:
   workflow_dispatch:
 
@@ -28,3 +28,48 @@ jobs:
         run: |
           codesign --verify --strict .build/Peeklet.app
           python3 audit.py --bundle .build/Peeklet.app
+
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Audit public files
+        run: python audit.py
+      - name: Build Windows application
+        run: dotnet build windows/Peeklet.Windows.csproj -c Release
+      - name: Run synthetic-image tests
+        shell: pwsh
+        run: |
+          $test = Start-Process dotnet -ArgumentList @('windows/bin/Release/net10.0-windows/Peeklet.dll', '--self-test') -PassThru -Wait -NoNewWindow
+          if ($test.ExitCode -ne 0) { throw "Windows self-tests failed: $($test.ExitCode)" }
+      - name: Publish Windows x64 executable
+        run: dotnet publish windows/Peeklet.Windows.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishTrimmed=false -o build/windows-x64
+      - name: Test published executable
+        shell: pwsh
+        run: |
+          $exe = (Resolve-Path 'build/windows-x64/Peeklet.exe').Path
+          $test = Start-Process -FilePath $exe -ArgumentList '--self-test' -PassThru -Wait
+          if ($test.ExitCode -ne 0) { throw "Published executable self-tests failed: $($test.ExitCode)" }
+      - name: Smoke test application startup
+        shell: pwsh
+        run: |
+          $exe = (Resolve-Path 'build/windows-x64/Peeklet.exe').Path
+          $app = Start-Process -FilePath $exe -PassThru
+          try {
+            Start-Sleep -Seconds 5
+            $app.Refresh()
+            if ($app.HasExited) { throw "Application exited during startup: $($app.ExitCode)" }
+          } finally {
+            if (!$app.HasExited) { Stop-Process -Id $app.Id }
+          }
+      - name: Save Windows executable
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: Peeklet-windows-x64
+          path: build/windows-x64/Peeklet.exe
+          if-no-files-found: error
+          retention-days: 7
