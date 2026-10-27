@@ -1,0 +1,30 @@
+name: Build and privacy checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Audit public files
+        run: python3 audit.py
+      - name: Build Apple Silicon and Intel app
+        run: PEEKLET_ARCH=universal bash build.sh
+      - name: Run synthetic-image tests
+        run: .build/Peeklet.app/Contents/MacOS/Peeklet --self-test
+      - name: Verify signature and sandbox
+        run: |
+          codesign --verify --strict .build/Peeklet.app
+          python3 audit.py --bundle .build/Peeklet.app
