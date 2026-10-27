@@ -3,11 +3,15 @@
 ._*
 .build/
 build/
+bin/
+obj/
 dist/
 *.app/
 *.dSYM/
 *.zip
 *.dmg
+*.exe
+*.pdb
 *.log
 *.jpg
 *.jpeg

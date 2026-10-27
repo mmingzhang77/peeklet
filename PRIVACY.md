@@ -6,11 +6,13 @@ Peeklet is a local macOS app. It does not require an account, collect analytics,
 
 You choose files using the macOS file picker. Peeklet reads only the selected files and creates PNG copies with a maximum dimension of 2048 pixels. The copies use generated identifiers rather than the original filenames. The import process does not retain the original file's EXIF or GPS metadata, and it does not save the original path in the library manifest. The original files are not modified or deleted.
 
-The copies and library index are stored in the app's sandbox under its Application Support directory:
+On macOS, copies and the library index are stored in the app's sandbox under its Application Support directory:
 
 ```text
 ~/Library/Containers/io.github.peeklet.app/Data/Library/Application Support/Peeklet
 ```
+
+On Windows, the copies and index are stored under `%LOCALAPPDATA%\Peeklet` in the current user's profile. Windows and macOS maintain separate libraries and do not synchronize them.
 
 This is local app storage, not an encrypted vault. Anyone who can access the files under your macOS account or its backups may be able to view the imported copies. macOS or your backup software may keep copies outside the app's control.
 

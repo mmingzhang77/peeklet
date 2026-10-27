@@ -2,7 +2,7 @@
 
 **Your photos, a touch away.**
 
-A small, local-only floating photo viewer for macOS.
+A small, local-only floating photo viewer for macOS and Windows.
 
 ![An illustration of the Peeklet floating control and an abstract image](demo.svg)
 
@@ -12,14 +12,14 @@ Peeklet keeps a small floating control on your desktop. Press and hold it to bri
 
 - **Quick preview:** hold the control for about 0.16 seconds to show the selected image. Release or move the pointer away to hide it.
 - **Small and movable:** drag the control to a comfortable position. The default control is 36 × 36 points; 24 × 24 and 44 × 44 options are also available.
-- **Your own images:** import up to 30 JPEG, PNG, HEIC, or TIFF files. Scroll over the control or select a photo in the menu to switch images.
+- **Your own images:** import up to 30 JPEG, PNG, or TIFF files (HEIC is also supported on macOS). Scroll over the control or select a photo in the menu to switch images.
 - **Adjustable preview:** choose 150 × 225, 180 × 270, or 230 × 345 points. The whole image is fitted inside the preview.
 - **Designed for focus:** the preview uses a nonactivating panel and does not request keyboard focus. Menus and the file picker may activate the app.
-- **Local by design:** there are no accounts, analytics, or network entitlements. Imported copies remain in the app's sandboxed local storage.
+- **Local by design:** there are no accounts, analytics, or network access. Imported copies remain in the app's local storage.
 
-Peeklet works with ordinary macOS Spaces and fullscreen windows. Some exclusive fullscreen apps, protected content, and system screens may appear above it. The app does not prevent screenshots, recordings, or someone looking at your screen.
+Peeklet works with ordinary desktop windows. Some exclusive fullscreen apps, protected content, and system screens may appear above it. The app does not prevent screenshots, recordings, or someone looking at your screen. Windows uses a notification-area icon for its menu; macOS uses a menu bar icon.
 
-## Get started
+## Get started on macOS
 
 1. Build Peeklet as described below and open `.build/Peeklet.app`.
 2. Click the Peeklet menu bar icon, or right-click the small floating control, and choose **Add Photos...**. Select the images you want to use. Each file may be up to 50 MiB and 100 megapixels.
@@ -28,7 +28,11 @@ Peeklet works with ordinary macOS Spaces and fullscreen windows. Some exclusive 
 
 Use **Remove Current Photo...** or **Remove All Photos...** to remove imported copies. Peeklet does not modify or delete the original files. See [PRIVACY.md](PRIVACY.md) for the details and limitations.
 
-## Build from source
+## Windows
+
+For setup, image format support, privacy details, and build instructions, see [Peeklet for Windows](windows/README.md). The Windows build is a separate application for 64-bit Windows.
+
+## Build from source on macOS
 
 You need macOS 13 or later and Apple's Xcode Command Line Tools. No third-party packages are required.
 
@@ -54,7 +58,7 @@ The local build is ad-hoc signed and is **not notarized** with an Apple Develope
 
 ## Privacy and limitations
 
-Peeklet stores resized PNG copies inside its app sandbox, using generated identifiers instead of original filenames. The import process does not retain source EXIF or GPS metadata. Your original files are untouched. Copies are local files, not an encrypted vault; system backups, screen recording, screenshots, and cloud-backed locations are outside Peeklet's control. See [PRIVACY.md](PRIVACY.md).
+Peeklet stores resized PNG copies in local application storage, using generated identifiers instead of original filenames. The import process does not retain source EXIF or GPS metadata. Your original files are untouched. Copies are local files, not an encrypted vault; system backups, screen recording, screenshots, and cloud-backed locations are outside Peeklet's control. See [PRIVACY.md](PRIVACY.md).
 
 Peeklet does not require Accessibility, screen recording, camera, or microphone access and does not install a login item.
 
