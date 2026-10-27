@@ -12,6 +12,8 @@ ALLOWED = {
     "Peeklet.swift", "PhotoLibrary.swift", "SelfTests.swift", "build.sh",
     "Info.plist", "Entitlements.plist", "README.md", "LICENSE", "PRIVACY.md",
     "SECURITY.md", "CONTRIBUTING.md", "CHANGELOG.md", "demo.svg", "audit.py",
+    "windows/Program.cs", "windows/PeekWindow.cs", "windows/PhotoLibrary.cs",
+    "windows/SelfTests.cs", "windows/Peeklet.Windows.csproj", "windows/README.md",
 }
 EXPECTED_ENTITLEMENTS = {
     "com.apple.security.app-sandbox": True,
